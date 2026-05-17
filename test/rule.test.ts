@@ -1,127 +1,93 @@
-/* eslint-disable unicorn/no-array-reduce */
-
-import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import cliHelpPlugin from '../src'
-import { getHelpMarkdown, renderHelpMarkdownBasic } from '../src/utilities/get-help-markdown'
-import { helpObjectToMarkdown } from '../src/utilities/help-object-to-markdown'
-import { helpStringToObject } from '../src/utilities/help-string-to-object'
-
-const cliHelpRule = cliHelpPlugin['cli-help']
+import { getApiMarkdown } from '../src/utilities/get-api-markdown'
+import { resolveEntryPoint } from '../src/utilities/resolve-entry-point'
 
 const importMetaDirname = path.dirname(fileURLToPath(import.meta.url))
+const sampleLibPath = path.join(importMetaDirname, 'assets/fixtures/sample-lib.ts')
 
-// Load all --help command output samples in ./assets/help-supported
-const helpSamplesSupported = fs
-	.readdirSync(`${importMetaDirname}/assets/help-supported`)
-	.filter((file) => file.endsWith('.txt'))
-	.reduce<Record<string, string>>((acc, file) => {
-		const name = path.basename(file, '.txt')
-		const content = fs.readFileSync(`${importMetaDirname}/assets/help-supported/${file}`, 'utf8')
-		return { ...acc, [name]: content }
-	}, {})
+describe('resolve entry point', () => {
+	it('should resolve an explicit entry point', async () => {
+		const result = await resolveEntryPoint(sampleLibPath)
+		expect(result).toBe(sampleLibPath)
+	})
 
-// These samples should just pass through to raw output, because we can't parse them
-const unsupportedDirectory = `${importMetaDirname}/assets/help-unsupported`
-const helpSamplesUnsupported = fs.existsSync(unsupportedDirectory)
-	? fs
-			.readdirSync(unsupportedDirectory)
-			.filter((file) => file.endsWith('.txt'))
-			.reduce<Record<string, string>>((acc, file) => {
-				const name = path.basename(file, '.txt')
-				const content = fs.readFileSync(`${unsupportedDirectory}/${file}`, 'utf8')
-				return { ...acc, [name]: content }
-			}, {})
-	: {}
-
-describe('cli help string to object', () => {
-	for (const [name, helpText] of Object.entries(helpSamplesSupported)) {
-		it(`should convert "${name}" to a valid program info object`, () => {
-			const object = helpStringToObject(helpText)
-			expect(object).toBeDefined()
-			expect(object).toMatchSnapshot()
-		})
-	}
+	it('should throw for a non-existent explicit entry point', async () => {
+		await expect(resolveEntryPoint('/nonexistent/file.ts')).rejects.toThrow(
+			'Explicit entry point not found',
+		)
+	})
 })
 
-describe('cli help object to markdown', () => {
-	for (const [name, helpText] of Object.entries(helpSamplesSupported)) {
-		it(`should convert a help object or "${name}" to valid markdown`, () => {
-			const object = helpStringToObject(helpText)
-			expect(object).toBeDefined()
-			const markdown = helpObjectToMarkdown(object!)
-			expect(markdown).toMatchSnapshot()
-		})
-	}
+describe('get api markdown', () => {
+	it('should generate markdown from a TypeScript file', async () => {
+		const markdown = await getApiMarkdown(sampleLibPath, 3)
+		expect(markdown).toBeTruthy()
+		expect(markdown.length).toBeGreaterThan(0)
+	})
+
+	it('should include function signatures', async () => {
+		const markdown = await getApiMarkdown(sampleLibPath, 3)
+		expect(markdown).toContain('greet')
+		expect(markdown).toContain('translate')
+	})
+
+	it('should include type definitions', async () => {
+		const markdown = await getApiMarkdown(sampleLibPath, 3)
+		expect(markdown).toContain('GreetingOptions')
+		expect(markdown).toContain('GreetingResult')
+		expect(markdown).toContain('Language')
+	})
+
+	it('should include class documentation', async () => {
+		const markdown = await getApiMarkdown(sampleLibPath, 3)
+		expect(markdown).toContain('GreetingGenerator')
+	})
+
+	it('should include JSDoc descriptions', async () => {
+		const markdown = await getApiMarkdown(sampleLibPath, 3)
+		expect(markdown).toContain('Generate a personalized greeting')
+	})
+
+	it('should include @example code blocks', async () => {
+		const markdown = await getApiMarkdown(sampleLibPath, 3)
+		expect(markdown).toContain("greet('World')")
+	})
+
+	it('should include exported constants', async () => {
+		const markdown = await getApiMarkdown(sampleLibPath, 3)
+		// Underscores are escaped in markdown output
+		expect(markdown).toContain(String.raw`MAX\_GREETING\_LENGTH`)
+	})
+
+	it('should respect heading level option', async () => {
+		const h2 = await getApiMarkdown(sampleLibPath, 2)
+		const h4 = await getApiMarkdown(sampleLibPath, 4)
+
+		// H2 output should have ## as minimum heading
+		expect(h2).toMatch(/^## /m)
+		expect(h2).not.toMatch(/^# /m)
+
+		// H4 output should have #### as minimum heading
+		expect(h4).toMatch(/^#### /m)
+		expect(h4).not.toMatch(/^#{1,3} /m)
+	})
+
+	it('should produce a complete snapshot', async () => {
+		const markdown = await getApiMarkdown(sampleLibPath, 3)
+		expect(markdown).toMatchSnapshot()
+	})
 })
 
-describe('cli help fall back on unparsable output', () => {
-	const unsupportedEntries = Object.entries(helpSamplesUnsupported)
+describe('self-documentation', () => {
+	const pluginEntryPoint = path.resolve(importMetaDirname, '../src/index.ts')
 
-	if (unsupportedEntries.length === 0) {
-		it('no unsupported samples to test (all formats now supported)', () => {
-			expect(true).toBe(true)
-		})
-	}
-
-	for (const [name, helpText] of unsupportedEntries) {
-		it(`should fall back to the basic code block since "${name}" cannot yet be parsed`, () => {
-			// Attempt to parse typical Yargs help output
-			const programInfo = helpStringToObject(helpText)
-
-			expect(programInfo).toBeUndefined()
-
-			// Fall back to basic code fence output if parsing fails
-			const markdown = renderHelpMarkdownBasic(helpText)
-			expect(markdown).toMatchSnapshot()
-		})
-	}
-})
-
-describe('cli help invocation', { timeout: 60_000 }, () => {
-	it('should get help Markdown directly from the output of a command', async () => {
-		const helpMarkdown = await getHelpMarkdown(`${importMetaDirname}/assets/cli.js`)
-		expect(helpMarkdown).toMatchSnapshot()
-	})
-
-	it('should fall back to a basic code block if the help output cannot be parsed', async () => {
-		const helpMarkdown = await getHelpMarkdown('git')
-		expect(helpMarkdown).toContain('```')
-		expect(helpMarkdown).toContain('usage: git')
-	})
-
-	// Skipping this test for now since this package doesn't export a binary
-	it.skip('should try to infer the binary to get help from based on package.json', async () => {
-		// TODO figure this out
-		// @ts-expect-error - Types not narrowing...
-		// eslint-disable-next-line ts/no-unsafe-assignment, ts/no-unsafe-call
-		const helpMarkdown = await cliHelpRule.content()
-		expect(helpMarkdown).toMatchSnapshot()
-	})
-
-	it('should correctly identify executables', async () => {
-		// TODO figure this out
-		// @ts-expect-error - Types not narrowing...
-		// eslint-disable-next-line ts/no-unsafe-assignment, ts/no-unsafe-call
-		const helpMarkdown = await cliHelpRule.content({ cliCommand: 'git' })
-		expect(helpMarkdown).toContain('```')
-		expect(helpMarkdown).toContain('usage: git')
-	})
-
-	it('should correctly identify non-executables', async () => {
-		// TODO figure this out
-		// @ts-expect-error - Types not narrowing...
-		// eslint-disable-next-line ts/no-unsafe-call
-		await expect(cliHelpRule.content({ cliCommand: '/dev/null' })).rejects.toThrow()
-	})
-
-	it('should correctly resolve binary names that are in package.json but not on the path', async () => {
-		// TODO figure this out
-		// @ts-expect-error - Types not narrowing...
-		// eslint-disable-next-line ts/no-unsafe-assignment, ts/no-unsafe-call
-		const helpMarkdown = await cliHelpRule.content({ cliCommand: 'mdat' })
-		expect(helpMarkdown).toMatchSnapshot()
+	it('should generate docs for the plugin itself with named types', async () => {
+		const markdown = await getApiMarkdown(pluginEntryPoint, 3)
+		expect(markdown).toContain('ApiRuleOptions')
+		expect(markdown).toContain('entryPoint')
+		expect(markdown).toContain('headingLevel')
+		expect(markdown).toMatchSnapshot()
 	})
 })

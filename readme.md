@@ -14,7 +14,7 @@
 
 <!-- short-description -->
 
-**Mdat plugin to generate tabular help documentation for CLI tools in Markdown files.**
+**Mdat plugin to generate API documentation from TypeScript source files using JSDoc and type information.**
 
 <!-- /short-description -->
 
@@ -58,13 +58,13 @@ export default defineConfig({
 Assuming you have an executable with a `--help` flag on your path or in your project's scope:
 
 ```markdown
-<!-- cli-help({ cliCommand: "mdat", depth: 1 }) -->
+<!-- cli-help({ command: "mdat", depth: 1 }) -->
 ```
 
 Then run the `mdat` CLI command on your Markdown file to expand the rule and embed the tabular help output:
 
 ````markdown
-<!-- cli-help({ cliCommand: "mdat", depth: 1 }) -->
+<!-- cli-help({ command: "mdat", depth: 1 }) -->
 
 #### Command: `mdat`
 
@@ -110,7 +110,7 @@ The command is also aliased under the `<!-- cli -->` keyword.
 This would have equivalent output to the above:
 
 ```markdown
-<!-- cli({ cliCommand: "mdat", depth: 1 }) -->
+<!-- cli({ command: "mdat", depth: 1 }) -->
 ```
 
 If you embed the rule without any arguments, it will look for the binary file listed in the closest `package.json` file and run it with `--help`. This is what you want if you're documenting a package's CLI options in its readme.md file:
@@ -157,7 +157,7 @@ Currently, the parser implementation lives in this repository because I really o
 
 ## Maintainers
 
-[@kitschpatrol](https://github.com/kitschpatrol)
+[kitschpatrol](https://github.com/kitschpatrol)
 
 <!-- contributing -->
 
@@ -174,3 +174,72 @@ Currently, the parser implementation lives in this repository because I really o
 [MIT](license.txt) © Eric Mika
 
 <!-- /license -->
+
+<!-- api -->
+
+### Function: setLogger()
+
+> **setLogger**(`logger?`): `void`
+
+Set the logger instance for the module. Export this for library consumers to
+inject their own logger.
+
+#### Parameters
+
+| Parameter | Type                                           | Description                                                                |
+| --------- | ---------------------------------------------- | -------------------------------------------------------------------------- |
+| `logger?` | `ILogBasic` \| `ILogLayer`<`ILogLayer`<`any`>> | Accepts either a LogLayer instance or a Console- or Stream-like log target |
+
+#### Returns
+
+`void`
+
+### Type Alias: ApiRuleOptions
+
+> **ApiRuleOptions** = `object`
+
+Options for the `<!-- api -->` rule.
+
+Pass these as a JSON5 argument in the comment tag, e.g.
+`<!-- api({entryPoint: "src/index.ts", headingLevel: 2}) -->`.
+
+#### Properties
+
+| Property        | Type     | Default value | Description                                                                                                                                                                   |
+| --------------- | -------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `entryPoint?`   | `string` | `undefined`   | Path to the TypeScript entry point file. If omitted, the entry point is inferred from `package.json` fields (`exports`, `types`, `main`) or common defaults (`src/index.ts`). |
+| `headingLevel?` | `number` | `3`           | Starting heading level for the generated documentation (1-6).                                                                                                                 |
+| `tsconfig?`     | `string` | `undefined`   | Path to a custom `tsconfig.json` file. Auto-detected if omitted.                                                                                                              |
+
+### Variable: default
+
+> `const` **default**: `Config`
+
+mdat plugin that generates API documentation from TypeScript source files.
+
+Uses TypeDoc and typedoc-plugin-markdown under the hood to extract JSDoc
+descriptions, type signatures, `@example` code blocks, and parameter tables
+from public exports.
+
+#### Example
+
+Register in your `mdat.config.ts`:
+
+```ts
+import { defineConfig } from 'mdat'
+import apiPlugin from 'mdat-plugin-api'
+
+export default defineConfig({
+  ...apiPlugin,
+})
+```
+
+Then use in your Markdown file:
+
+```markdown
+#### API
+
+<!-- api -->
+```
+
+<!-- /api -->

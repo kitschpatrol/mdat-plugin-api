@@ -1,9 +1,3 @@
-onlyBuiltDependencies:
-  - esbuild
-  - puppeteer
-  - unrs-resolver
-
-# Required by @kitschpatrol/shared-config
 publicHoistPattern:
   - '@kitschpatrol/repo-config'
   - '@kitschpatrol/typescript-config'
@@ -18,3 +12,7 @@ publicHoistPattern:
 
 overrides:
   normalize-package-data: ^8.0.0
+allowBuilds:
+  esbuild: true
+  puppeteer: true
+  unrs-resolver: true

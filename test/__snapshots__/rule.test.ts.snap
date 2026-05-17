@@ -1,0 +1,233 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`get api markdown > should produce a complete snapshot 1`] = `
+"### Class: GreetingGenerator
+
+A greeting generator that maintains state.
+
+#### Example
+
+\`\`\`ts
+const gen = new GreetingGenerator('en')
+const result = gen.generate('World')
+\`\`\`
+
+#### Constructors
+
+##### Constructor
+
+> **new GreetingGenerator**(\`language?\`): \`GreetingGenerator\`
+
+Create a new greeting generator.
+
+###### Parameters
+
+| Parameter | Type | Default value | Description |
+| ------ | ------ | ------ | ------ |
+| \`language\` | \`\`Language\`\` | \`'en'\` | The default language for greetings |
+
+###### Returns
+
+\`GreetingGenerator\`
+
+#### Methods
+
+##### generate()
+
+> **generate**(\`name\`, \`options?\`): \`\`GreetingResult\`\`
+
+Generate a greeting in the configured language.
+
+###### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| \`name\` | \`string\` | The name to greet |
+| \`options?\` | \`\`GreetingOptions\`\` | Optional greeting configuration |
+
+###### Returns
+
+\`\`GreetingResult\`\`
+
+The greeting result
+
+### Function: default()
+
+> **default**(\`name\`): \`string\`
+
+Create and immediately invoke a greeting with sensible defaults.
+
+This is the simplest way to generate a greeting — just pass a name.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| \`name\` | \`string\` | The name to greet |
+
+#### Returns
+
+\`string\`
+
+The greeting message string
+
+#### Example
+
+\`\`\`ts
+import hello from 'sample-lib'
+console.log(hello('World')) // "Hello, World!"
+\`\`\`
+
+### Function: greet()
+
+> **greet**(\`name\`, \`options?\`): \`\`GreetingResult\`\`
+
+Generate a personalized greeting.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| \`name\` | \`string\` | The name of the person to greet |
+| \`options?\` | \`\`GreetingOptions\`\` | Configuration for the greeting |
+
+#### Returns
+
+\`\`GreetingResult\`\`
+
+A greeting result with the message and metadata
+
+#### Examples
+
+\`\`\`ts
+const result = greet('World')
+console.log(result.message) // "Hello, World!"
+\`\`\`
+
+\`\`\`ts
+const result = greet('Professor', { formal: true })
+console.log(result.message) // "Good day, Professor."
+\`\`\`
+
+### Function: translate()
+
+> **translate**(\`greeting\`, \`language\`): \`\`GreetingResult\`\`
+
+Translate a greeting to a different language.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| \`greeting\` | \`\`GreetingResult\`\` | The greeting result to translate |
+| \`language\` | \`\`Language\`\` | Target language code |
+
+#### Returns
+
+\`\`GreetingResult\`\`
+
+A new greeting result in the target language
+
+### Type Alias: GreetingOptions
+
+> **GreetingOptions** = \`object\`
+
+Configuration options for the greeting system.
+
+#### Properties
+
+| Property | Type | Description |
+| ------ | ------ | ------ |
+| \`formal?\` | \`boolean\` | Whether to use formal language. |
+| \`maxLength?\` | \`number\` | Maximum length of the greeting. |
+
+### Type Alias: GreetingResult
+
+> **GreetingResult** = \`object\`
+
+A greeting result with metadata.
+
+#### Properties
+
+| Property | Type | Description |
+| ------ | ------ | ------ |
+| \`message\` | \`string\` | The formatted greeting message. |
+| \`timestamp\` | \`Date\` | Timestamp when the greeting was generated. |
+
+### Type Alias: Language
+
+> **Language** = \`"en"\` \\| \`"es"\` \\| \`"fr"\` \\| \`"ja"\`
+
+Supported greeting languages.
+
+### Variable: MAX\\_GREETING\\_LENGTH
+
+> \`const\` **MAX\\_GREETING\\_LENGTH**: \`100\` = \`100\`
+
+Default maximum greeting length."
+`;
+
+exports[`self-documentation > should generate docs for the plugin itself with named types 1`] = `
+"### Function: setLogger()
+
+> **setLogger**(\`logger?\`): \`void\`
+
+Set the logger instance for the module. Export this for library consumers to
+inject their own logger.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| \`logger?\` | \`ILogBasic\` \\| \`ILogLayer\`\\<\`ILogLayer\`\\<\`any\`\\>\\> | Accepts either a LogLayer instance or a Console- or Stream-like log target |
+
+#### Returns
+
+\`void\`
+
+### Type Alias: ApiRuleOptions
+
+> **ApiRuleOptions** = \`object\`
+
+Options for the \`<!-- api -->\` rule.
+
+Pass these as a JSON5 argument in the comment tag, e.g.
+\`<!-- api({entryPoint: "src/index.ts", headingLevel: 2}) -->\`.
+
+#### Properties
+
+| Property | Type | Default value | Description |
+| ------ | ------ | ------ | ------ |
+| \`entryPoint?\` | \`string\` | \`undefined\` | Path to the TypeScript entry point file. If omitted, the entry point is inferred from \`package.json\` fields (\`exports\`, \`types\`, \`main\`) or common defaults (\`src/index.ts\`). |
+| \`headingLevel?\` | \`number\` | \`3\` | Starting heading level for the generated documentation (1-6). |
+| \`tsconfig?\` | \`string\` | \`undefined\` | Path to a custom \`tsconfig.json\` file. Auto-detected if omitted. |
+
+### Variable: default
+
+> \`const\` **default**: \`Config\`
+
+mdat plugin that generates API documentation from TypeScript source files.
+
+Uses TypeDoc and typedoc-plugin-markdown under the hood to extract JSDoc
+descriptions, type signatures, \`@example\` code blocks, and parameter tables
+from public exports.
+
+#### Example
+
+Register in your \`mdat.config.ts\`:
+\`\`\`ts
+import { defineConfig } from 'mdat'
+import apiPlugin from 'mdat-plugin-api'
+
+export default defineConfig({
+  ...apiPlugin,
+})
+\`\`\`
+
+Then use in your Markdown file:
+\`\`\`markdown
+#### API
+
+<!-- api -->
+\`\`\`"
+`;

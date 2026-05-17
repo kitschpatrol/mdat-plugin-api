@@ -19,6 +19,6 @@ export let log = createLogger({
  * @param logger - Accepts either a LogLayer instance or a Console- or
  *   Stream-like log target
  */
-export function setLogger(logger?: ILogBasic | ILogLayer) {
+export function setLogger(logger?: ILogBasic | ILogLayer<unknown>) {
 	log = injectionHelper(logger)
 }
