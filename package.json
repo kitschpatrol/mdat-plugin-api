@@ -9,8 +9,7 @@
 		"api",
 		"typedoc",
 		"typescript",
-		"documentation",
-		"npm-package"
+		"documentation"
 	],
 	"homepage": "https://github.com/kitschpatrol/mdat-plugin-api",
 	"bugs": "https://github.com/kitschpatrol/mdat-plugin-api/issues",
