@@ -2,10 +2,13 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import { log } from './log'
 
+const JS_EXTENSION_REGEX = /\.[cm]?js$/v
+
 /**
  * Resolve the TypeScript entry point for a project.
  *
  * Checks in order:
+ *
  * 1. Explicit `entryPoint` option
  * 2. `package.json` exports["."].types
  * 3. `package.json` exports["."].import → resolve .ts equivalent
@@ -13,7 +16,7 @@ import { log } from './log'
  * 5. `package.json` main field → resolve .ts equivalent
  * 6. Common defaults: src/index.ts, src/lib/index.ts
  *
- * @throws If no entry point can be resolved
+ * @throws {Error} If no entry point can be resolved
  */
 export async function resolveEntryPoint(explicit?: string): Promise<string> {
 	if (explicit !== undefined) {
@@ -34,34 +37,28 @@ export async function resolveEntryPoint(explicit?: string): Promise<string> {
 	}
 
 	if (packageJson !== undefined) {
-		// Try exports["."].types
 		const exports = packageJson.exports as Record<string, unknown> | undefined
-		const dotExport = exports?.['.'] as Record<string, string> | string | undefined
+		// Convert a possible JSON null to undefined
+		const dotExport = (exports?.['.'] ?? undefined) as Record<string, string> | string | undefined
 
-		if (typeof dotExport === 'object' && dotExport !== null) {
-			if (dotExport.types) {
-				const tsPath = await resolveToSource(dotExport.types)
-				if (tsPath) return tsPath
+		// Try exports["."] types and import, then top-level types and main fields
+		const fieldCandidates: Array<string | undefined> =
+			typeof dotExport === 'object' ? [dotExport.types, dotExport.import] : []
+
+		fieldCandidates.push(
+			packageJson.types as string | undefined,
+			packageJson.main as string | undefined,
+		)
+
+		for (const fieldValue of fieldCandidates) {
+			if (fieldValue === undefined || fieldValue === '') {
+				continue
 			}
 
-			if (dotExport.import) {
-				const tsPath = await resolveToSource(dotExport.import)
-				if (tsPath) return tsPath
+			const tsPath = await resolveToSource(fieldValue)
+			if (tsPath !== undefined) {
+				return tsPath
 			}
-		}
-
-		// Try types field
-		const types = packageJson.types as string | undefined
-		if (types) {
-			const tsPath = await resolveToSource(types)
-			if (tsPath) return tsPath
-		}
-
-		// Try main field
-		const main = packageJson.main as string | undefined
-		if (main) {
-			const tsPath = await resolveToSource(main)
-			if (tsPath) return tsPath
 		}
 	}
 
@@ -88,8 +85,9 @@ async function resolveToSource(outputPath: string): Promise<string | undefined> 
 	const resolved = path.resolve(outputPath)
 
 	// If it's already a .ts file and exists, use it directly
-	if (resolved.endsWith('.ts') && !resolved.endsWith('.d.ts') && (await fileExists(resolved)))
+	if (resolved.endsWith('.ts') && !resolved.endsWith('.d.ts') && (await fileExists(resolved))) {
 		return resolved
+	}
 
 	// Try replacing dist/ with src/ and .d.ts/.js with .ts
 	const candidates = generateSourceCandidates(resolved)
@@ -115,7 +113,7 @@ function generateSourceCandidates(distributionPath: string): string[] {
 	if (tsPath.endsWith('.d.ts')) {
 		tsPath = tsPath.slice(0, -5) + '.ts'
 	} else if (tsPath.endsWith('.js') || tsPath.endsWith('.mjs') || tsPath.endsWith('.cjs')) {
-		tsPath = tsPath.replace(/\.[cm]?js$/, '.ts')
+		tsPath = tsPath.replace(JS_EXTENSION_REGEX, '.ts')
 	}
 
 	candidates.push(tsPath)

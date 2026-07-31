@@ -7,14 +7,14 @@ export { setLogger } from './utilities/log'
 /**
  * Options for the `<!-- api -->` rule.
  *
- * Pass these as a JSON5 argument in the comment tag, e.g.
- * `<!-- api({entryPoint: "src/index.ts", headingLevel: 2}) -->`.
+ * Pass these as a JSON5 argument in the comment tag, e.g. `<!--
+ * api({entryPoint: "src/index.ts", headingLevel: 2}) -->`.
  */
 export type ApiRuleOptions = {
 	/**
 	 * Path to the TypeScript entry point file. If omitted, the entry point is
-	 * inferred from `package.json` fields (`exports`, `types`, `main`) or
-	 * common defaults (`src/index.ts`).
+	 * inferred from `package.json` fields (`exports`, `types`, `main`) or common
+	 * defaults (`src/index.ts`).
 	 */
 	entryPoint?: string
 	/**
@@ -42,23 +42,16 @@ const optionsSchema = z
  * descriptions, type signatures, `@example` code blocks, and parameter tables
  * from public exports.
  *
+ * Register in your `mdat.config.ts`, then embed `<!-- api -->` placeholder
+ * comments in your Markdown files:
+ *
  * @example
- * Register in your `mdat.config.ts`:
- * ```ts
- * import { defineConfig } from 'mdat'
- * import apiPlugin from 'mdat-plugin-api'
+ * 	import { defineConfig } from 'mdat'
+ * 	import apiPlugin from 'mdat-plugin-api'
  *
- * export default defineConfig({
- *   ...apiPlugin,
- * })
- * ```
- *
- * Then use in your Markdown file:
- * ```markdown
- * ## API
- *
- * <!-- api -->
- * ```
+ * 	export default defineConfig({
+ * 		...apiPlugin,
+ * 	})
  */
 const apiPlugin = defineConfig({
 	api: {

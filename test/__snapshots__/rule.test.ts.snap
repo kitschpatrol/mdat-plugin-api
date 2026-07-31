@@ -9,7 +9,7 @@ A greeting generator that maintains state.
 
 \`\`\`ts
 const gen = new GreetingGenerator('en')
-const result = gen.generate('World')
+	const result = gen.generate('World')
 \`\`\`
 
 #### Constructors
@@ -75,7 +75,7 @@ The greeting message string
 
 \`\`\`ts
 import hello from 'sample-lib'
-console.log(hello('World')) // "Hello, World!"
+	console.log(hello('World')) // "Hello, World!"
 \`\`\`
 
 ### Function: greet()
@@ -101,12 +101,12 @@ A greeting result with the message and metadata
 
 \`\`\`ts
 const result = greet('World')
-console.log(result.message) // "Hello, World!"
+	console.log(result.message) // "Hello, World!"
 \`\`\`
 
 \`\`\`ts
 const result = greet('Professor', { formal: true })
-console.log(result.message) // "Good day, Professor."
+	console.log(result.message) // "Good day, Professor."
 \`\`\`
 
 ### Function: translate()
@@ -179,7 +179,7 @@ inject their own logger.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| \`logger?\` | \`ILogBasic\` \\| \`ILogLayer\`\\<\`ILogLayer\`\\<\`any\`\\>\\> | Accepts either a LogLayer instance or a Console- or Stream-like log target |
+| \`logger?\` | \`ILogBasic\` \\| \`ILogLayer\`\\<\`unknown\`\\> | Accepts either a LogLayer instance or a Console- or Stream-like log target |
 
 #### Returns
 
@@ -191,8 +191,8 @@ inject their own logger.
 
 Options for the \`<!-- api -->\` rule.
 
-Pass these as a JSON5 argument in the comment tag, e.g.
-\`<!-- api({entryPoint: "src/index.ts", headingLevel: 2}) -->\`.
+Pass these as a JSON5 argument in the comment tag, e.g. \`<!--
+api({entryPoint: "src/index.ts", headingLevel: 2}) -->\`.
 
 #### Properties
 
@@ -206,28 +206,23 @@ Pass these as a JSON5 argument in the comment tag, e.g.
 
 > \`const\` **default**: \`Config\`
 
-mdat plugin that generates API documentation from TypeScript source files.
+Mdat plugin that generates API documentation from TypeScript source files.
 
 Uses TypeDoc and typedoc-plugin-markdown under the hood to extract JSDoc
 descriptions, type signatures, \`@example\` code blocks, and parameter tables
 from public exports.
 
+Register in your \`mdat.config.ts\`, then embed \`<!-- api -->\` placeholder
+comments in your Markdown files:
+
 #### Example
 
-Register in your \`mdat.config.ts\`:
 \`\`\`ts
 import { defineConfig } from 'mdat'
-import apiPlugin from 'mdat-plugin-api'
+	import apiPlugin from 'mdat-plugin-api'
 
-export default defineConfig({
-  ...apiPlugin,
-})
-\`\`\`
-
-Then use in your Markdown file:
-\`\`\`markdown
-#### API
-
-<!-- api -->
+	export default defineConfig({
+		...apiPlugin,
+	})
 \`\`\`"
 `;

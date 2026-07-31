@@ -9,10 +9,8 @@ publicHoistPattern:
   - '*prettier*'
   - '*remark*'
   - '*stylelint*'
-
-overrides:
-  normalize-package-data: ^8.0.0
 allowBuilds:
   esbuild: true
   puppeteer: true
+  oxc-resolver: true
   unrs-resolver: true

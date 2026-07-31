@@ -6,8 +6,8 @@
 
 <!-- badges -->
 
-[![NPM Package mdat-plugin-api](https://img.shields.io/npm/v/mdat-plugin-api.svg)](https://npmjs.com/package/mdat-plugin-api)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![NPM Package mdat-plugin-api](https://img.shields.io/npm/v/mdat-plugin-api.svg)](https://www.npmjs.com/package/mdat-plugin-api)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/license/mit)
 [![CI](https://github.com/kitschpatrol/mdat-plugin-api/actions/workflows/ci.yml/badge.svg)](https://github.com/kitschpatrol/mdat-plugin-api/actions/workflows/ci.yml)
 
 <!-- /badges -->
@@ -163,7 +163,11 @@ Currently, the parser implementation lives in this repository because I really o
 
 ## Contributing
 
-[Issues](https://github.com/kitschpatrol/mdat-plugin-api/issues) and pull requests are welcome.
+[Issues](https://github.com/kitschpatrol/mdat-plugin-api/issues) are welcome and appreciated.
+
+Please open an issue to discuss changes before submitting a pull request. Unsolicited PRs (especially AI-generated ones) are unlikely to be merged.
+
+This repository uses [@kitschpatrol/shared-config](https://github.com/kitschpatrol/shared-config) (via its `ksc` CLI) for linting and formatting, plus [MDAT](https://github.com/kitschpatrol/mdat) for readme placeholder expansion.
 
 <!-- /contributing -->
 
@@ -171,7 +175,7 @@ Currently, the parser implementation lives in this repository because I really o
 
 ## License
 
-[MIT](license.txt) © Eric Mika
+[MIT](license.txt) © [Eric Mika](https://ericmika.com)
 
 <!-- /license -->
 
@@ -186,9 +190,9 @@ inject their own logger.
 
 #### Parameters
 
-| Parameter | Type                                           | Description                                                                |
-| --------- | ---------------------------------------------- | -------------------------------------------------------------------------- |
-| `logger?` | `ILogBasic` \| `ILogLayer`<`ILogLayer`<`any`>> | Accepts either a LogLayer instance or a Console- or Stream-like log target |
+| Parameter | Type                                  | Description                                                                |
+| --------- | ------------------------------------- | -------------------------------------------------------------------------- |
+| `logger?` | `ILogBasic` \| `ILogLayer`<`unknown`> | Accepts either a LogLayer instance or a Console- or Stream-like log target |
 
 #### Returns
 
@@ -200,8 +204,8 @@ inject their own logger.
 
 Options for the `<!-- api -->` rule.
 
-Pass these as a JSON5 argument in the comment tag, e.g.
-`<!-- api({entryPoint: "src/index.ts", headingLevel: 2}) -->`.
+Pass these as a JSON5 argument in the comment tag, e.g. `<!--
+api({entryPoint: "src/index.ts", headingLevel: 2}) -->`.
 
 #### Properties
 
@@ -215,15 +219,16 @@ Pass these as a JSON5 argument in the comment tag, e.g.
 
 > `const` **default**: `Config`
 
-mdat plugin that generates API documentation from TypeScript source files.
+Mdat plugin that generates API documentation from TypeScript source files.
 
 Uses TypeDoc and typedoc-plugin-markdown under the hood to extract JSDoc
 descriptions, type signatures, `@example` code blocks, and parameter tables
 from public exports.
 
-#### Example
+Register in your `mdat.config.ts`, then embed `<!-- api -->` placeholder
+comments in your Markdown files:
 
-Register in your `mdat.config.ts`:
+#### Example
 
 ```ts
 import { defineConfig } from 'mdat'
@@ -232,14 +237,6 @@ import apiPlugin from 'mdat-plugin-api'
 export default defineConfig({
   ...apiPlugin,
 })
-```
-
-Then use in your Markdown file:
-
-```markdown
-#### API
-
-<!-- api -->
 ```
 
 <!-- /api -->

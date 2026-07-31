@@ -26,28 +26,25 @@ export type Language = 'en' | 'es' | 'fr' | 'ja'
 /**
  * Generate a personalized greeting.
  *
+ * @example
+ * 	const result = greet('World')
+ * 	console.log(result.message) // "Hello, World!"
+ *
+ * @example
+ * 	const result = greet('Professor', { formal: true })
+ * 	console.log(result.message) // "Good day, Professor."
+ *
  * @param name - The name of the person to greet
  * @param options - Configuration for the greeting
+ *
  * @returns A greeting result with the message and metadata
- *
- * @example
- * ```ts
- * const result = greet('World')
- * console.log(result.message) // "Hello, World!"
- * ```
- *
- * @example
- * ```ts
- * const result = greet('Professor', { formal: true })
- * console.log(result.message) // "Good day, Professor."
- * ```
  */
 export function greet(name: string, options?: GreetingOptions): GreetingResult {
 	const { formal = false, maxLength } = options ?? {}
 	let message = formal ? `Good day, ${name}.` : `Hello, ${name}!`
 
 	if (maxLength !== undefined && message.length > maxLength) {
-		message = message.slice(0, maxLength - 1) + '\u2026'
+		message = message.slice(0, maxLength - 1) + '\u{2026}'
 	}
 
 	return { message, timestamp: new Date() }
@@ -58,6 +55,7 @@ export function greet(name: string, options?: GreetingOptions): GreetingResult {
  *
  * @param greeting - The greeting result to translate
  * @param language - Target language code
+ *
  * @returns A new greeting result in the target language
  */
 export function translate(greeting: GreetingResult, language: Language): GreetingResult {
@@ -65,7 +63,7 @@ export function translate(greeting: GreetingResult, language: Language): Greetin
 		en: greeting.message,
 		es: greeting.message.replace('Hello', 'Hola'),
 		fr: greeting.message.replace('Hello', 'Bonjour'),
-		ja: greeting.message.replace('Hello', '\u3053\u3093\u306B\u3061\u306F'),
+		ja: greeting.message.replace('Hello', '\u{3053}\u{3093}\u{306B}\u{3061}\u{306F}'),
 	}
 
 	return {
@@ -82,14 +80,13 @@ export const MAX_GREETING_LENGTH = 100
  *
  * This is the simplest way to generate a greeting — just pass a name.
  *
- * @param name - The name to greet
- * @returns The greeting message string
- *
  * @example
- * ```ts
- * import hello from 'sample-lib'
- * console.log(hello('World')) // "Hello, World!"
- * ```
+ * 	import hello from 'sample-lib'
+ * 	console.log(hello('World')) // "Hello, World!"
+ *
+ * @param name - The name to greet
+ *
+ * @returns The greeting message string
  */
 export default function hello(name: string): string {
 	return greet(name).message
@@ -99,10 +96,8 @@ export default function hello(name: string): string {
  * A greeting generator that maintains state.
  *
  * @example
- * ```ts
- * const gen = new GreetingGenerator('en')
- * const result = gen.generate('World')
- * ```
+ * 	const gen = new GreetingGenerator('en')
+ * 	const result = gen.generate('World')
  */
 export class GreetingGenerator {
 	private readonly language: Language
@@ -121,6 +116,7 @@ export class GreetingGenerator {
 	 *
 	 * @param name - The name to greet
 	 * @param options - Optional greeting configuration
+	 *
 	 * @returns The greeting result
 	 */
 	generate(name: string, options?: GreetingOptions): GreetingResult {

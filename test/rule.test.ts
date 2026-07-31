@@ -7,6 +7,11 @@ import { resolveEntryPoint } from '../src/utilities/resolve-entry-point'
 const importMetaDirname = path.dirname(fileURLToPath(import.meta.url))
 const sampleLibPath = path.join(importMetaDirname, 'assets/fixtures/sample-lib.ts')
 
+const H1_REGEX = /^# /mv
+const H2_REGEX = /^## /mv
+const H4_REGEX = /^#### /mv
+const H1_TO_H3_REGEX = /^#{1,3} /mv
+
 describe('resolve entry point', () => {
 	it('should resolve an explicit entry point', async () => {
 		const result = await resolveEntryPoint(sampleLibPath)
@@ -66,12 +71,12 @@ describe('get api markdown', () => {
 		const h4 = await getApiMarkdown(sampleLibPath, 4)
 
 		// H2 output should have ## as minimum heading
-		expect(h2).toMatch(/^## /m)
-		expect(h2).not.toMatch(/^# /m)
+		expect(h2).toMatch(H2_REGEX)
+		expect(h2).not.toMatch(H1_REGEX)
 
 		// H4 output should have #### as minimum heading
-		expect(h4).toMatch(/^#### /m)
-		expect(h4).not.toMatch(/^#{1,3} /m)
+		expect(h4).toMatch(H4_REGEX)
+		expect(h4).not.toMatch(H1_TO_H3_REGEX)
 	})
 
 	it('should produce a complete snapshot', async () => {
