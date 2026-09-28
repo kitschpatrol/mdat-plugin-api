@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
-import { Application } from 'typedoc'
+import { Application, normalizePath } from 'typedoc'
 import { log } from './log'
 
 const HEADING_REGEX = /^(#{1,6})\s/gmv
@@ -45,18 +45,19 @@ export async function getApiMarkdown(
 			typeDeclarationFormat: 'table',
 		}
 
+		// TypeDoc treats entryPoints as globs and rejects Windows path separators
 		const app = await Application.bootstrapWithPlugins({
-			entryPoints: [entryPoint],
+			entryPoints: [normalizePath(entryPoint)],
 			exclude: ['**/node_modules/**'],
 			excludePrivate: true,
 			excludeProtected: true,
 			hideGenerator: true,
-			out: temporaryDirectory,
+			out: normalizePath(temporaryDirectory),
 			plugin: ['typedoc-plugin-markdown'],
 			readme: 'none',
 			skipErrorChecking: true,
 			...markdownPluginOptions,
-			...(tsconfig !== undefined && tsconfig !== '' && { tsconfig }),
+			...(tsconfig !== undefined && tsconfig !== '' && { tsconfig: normalizePath(tsconfig) }),
 		})
 
 		const project = await app.convert()
