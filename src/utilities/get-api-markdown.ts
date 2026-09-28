@@ -156,12 +156,14 @@ function stripDefinedInColumn(content: string): string {
 			inDefinedInTable = true
 		}
 
-		if (inDefinedInTable) {
-			// Strip last column (everything after the second-to-last pipe)
-			const lastPipeIndex = line.lastIndexOf('|', line.length - 2)
-			if (lastPipeIndex > 0) {
-				lines[i] = line.slice(0, lastPipeIndex) + '|'
-			}
+		if (!inDefinedInTable) {
+			continue
+		}
+
+		// Strip last column (everything after the second-to-last pipe)
+		const lastPipeIndex = line.lastIndexOf('|', line.length - 2)
+		if (lastPipeIndex > 0) {
+			lines[i] = line.slice(0, lastPipeIndex) + '|'
 		}
 	}
 

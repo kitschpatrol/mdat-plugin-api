@@ -40,33 +40,33 @@
 		"bench": "vitest bench --run --no-file-parallelism --compare test/benchmarks/baseline.json",
 		"bench:baseline": "vitest bench --run --no-file-parallelism --outputJson test/benchmarks/baseline.json",
 		"build": "tsdown --no-fixed-extension --tsconfig tsconfig.build.json",
-		"clean": "shx rm -f pnpm-lock.yaml && git clean -fdX -e !.claude/",
+		"clean-deep": "shx rm -f pnpm-lock.yaml && git clean -fdX -e !.claude/",
 		"fix": "ksc fix",
 		"lint": "ksc lint",
-		"release": "bumpp --commit 'Release: %s' && pnpm build && NPM_AUTH_TOKEN=$(op read 'op://Personal/npm/token') pnpm publish",
+		"release": "bumpp --commit 'Release: %s' && pnpm build && pnpm publish --otp $(op item get npm --otp)",
 		"test": "vitest run --no-file-parallelism"
 	},
 	"dependencies": {
-		"lognow": "^0.8.0",
+		"lognow": "^0.8.4",
 		"typedoc": "^0.28.20",
-		"typedoc-plugin-markdown": "^4.12.0",
-		"zod": "^4.4.3"
+		"typedoc-plugin-markdown": "^4.13.1",
+		"zod": "^4.6.5"
 	},
 	"devDependencies": {
-		"@kitschpatrol/shared-config": "^8.5.0",
+		"@kitschpatrol/shared-config": "^8.10.1",
 		"@types/node": "~24.13.3",
-		"bumpp": "^12.1.1",
-		"mdat": "^3.0.0",
+		"bumpp": "^12.3.0",
+		"mdat": "^3.4.1",
 		"shx": "^0.4.0",
-		"tsdown": "^0.22.14",
+		"tsdown": "^0.23.0",
 		"typescript": "~6.0.3",
-		"vitest": "^4.1.10"
+		"vitest": "^5.0.2"
 	},
 	"peerDependencies": {
 		"mdat": "^3.0.0"
 	},
-	"packageManager": "pnpm@11.17.0",
+	"packageManager": "pnpm@12.6.0",
 	"engines": {
-		"node": ">=24.16.0"
+		"node": "^24.16.0 || >=26.3.0"
 	}
 }
