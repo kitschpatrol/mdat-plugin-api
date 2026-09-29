@@ -1,6 +1,6 @@
 {
 	"name": "mdat-plugin-api",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "Mdat plugin to generate API documentation from TypeScript source files using JSDoc and type information.",
 	"keywords": [
 		"markdown",
