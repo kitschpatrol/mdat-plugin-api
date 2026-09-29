@@ -1,0 +1,369 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`full format > edge cases > matches the snapshot 1`] = `
+"### Functions
+
+#### useHidden()
+
+> **useHidden**(\`options\`: \`GlobalOptions\`): \`GlobalOptions\`
+
+Takes a type that isn't exported, so TypeDoc can't link it.
+
+#### undocumented()
+
+> **undocumented**(\`a\`: \`string\`, \`b?\`: \`number\`): \`boolean\`
+
+#### overloaded()
+
+##### Call Signature
+
+> **overloaded**(\`value\`: \`string\`): \`string\`
+
+Overloaded for strings.
+
+##### Call Signature
+
+> **overloaded**(\`value\`: \`number\`): \`number\`
+
+Overloaded for numbers.
+
+#### configure()
+
+> **configure**(\`options\`: \`object\`): \`string\`
+
+Inline object parameter with a callback and a nested object.
+
+##### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| \`options\` | \\{ \`name\`: \`string\`; \`nested\`: \\{ \`deep\`: \`boolean\`; \\}; \`onChange?\`: (\`value\`: \`number\`) => \`void\`; \\} |
+| \`options.name\` | \`string\` |
+| \`options.nested\` | \\{ \`deep\`: \`boolean\`; \\} |
+| \`options.nested.deep\` | \`boolean\` |
+| \`options.onChange?\` | (\`value\`: \`number\`) => \`void\` |
+
+#### shout()
+
+> **shout**(\`text\`: \`string\`): \`string\`
+
+A function-typed variable.
+
+#### deep()
+
+> **deep**(): \`Promise\`\\<\\{ \`items\`: \`object\`[]; \`meta\`: \\{ \`count\`: \`number\`; \\}; \\}\\>
+
+Nested object types in return values.
+
+### Interfaces
+
+#### Adapter
+
+Reads and writes files.
+
+##### Properties
+
+| Property | Modifier | Type | Description |
+| ------ | ------ | ------ | ------ |
+| \`name\` | \`readonly\` | \`string\` | Adapter name. |
+
+##### Methods
+
+###### read()
+
+> **read**(\`path\`: \`string\`): \`Promise\`\\<\`string\`\\>
+
+Read a file.
+
+###### write()?
+
+> \`optional\` **write**(\`path\`: \`string\`, \`content\`: \`string\`): \`Promise\`\\<\`void\`\\>
+
+Optionally write a file.
+
+### Type Aliases
+
+#### CleanOptions
+
+> **CleanOptions** = \`Pick\`\\<\`GlobalOptions\`, \`"dryRun"\` \\| \`"namespace"\`\\>
+
+Options for cleaning, derived from options that aren't exported.
+
+#### Options
+
+> **Options** = \`GlobalOptions\`
+
+Alias of a type that isn't exported.
+
+#### Wrapped
+
+> **Wrapped**\\<\`T\`\\> = \`object\`
+
+A generic wrapper.
+
+##### Properties
+
+| Property | Type | Description |
+| ------ | ------ | ------ |
+| \`value\` | \`T\` | The wrapped value. |
+| \`wrapped\` | \`true\` | Always true. |
+
+#### EventName
+
+> **EventName** = \`\` \`on\${string}\` \`\`
+
+A template literal type.
+
+#### Quoted
+
+> **Quoted** = \`object\`
+
+Property names that aren't identifiers.
+
+##### Properties
+
+| Property | Type | Description |
+| ------ | ------ | ------ |
+| \`file name\` | \`string\` | Needs quotes. |"
+`;
+
+exports[`full format > namespaces > matches the snapshot 1`] = `
+"### Functions
+
+#### list()
+
+> **list**(): \`string\`[]
+
+Top-level list, distinct from \`things.list\`.
+
+#### describe()
+
+> **describe**(\`options\`: [\`things.ThingOptions\`](#thingsthingoptions)): \`string\`
+
+Uses a type from a namespace.
+
+### Namespaces
+
+#### things
+
+Things you can list and add.
+
+##### Functions
+
+###### things.list()
+
+> **list**(\`options?\`: [\`things.ThingOptions\`](#thingsthingoptions)): \`string\`[]
+
+List things.
+
+###### things.add()
+
+> **add**(\`name\`: \`string\`): \`string\`
+
+Add a thing.
+
+##### Type Aliases
+
+###### things.ThingOptions
+
+> **things.ThingOptions** = \`object\`
+
+Options shared across things.
+
+**Properties**
+
+| Property | Type | Description |
+| ------ | ------ | ------ |
+| \`verbose?\` | \`boolean\` | Say more. |
+
+##### Namespaces
+
+###### things.nested
+
+Nested even deeper.
+
+**Functions**
+
+**things.nested.count()**
+
+> **count**(): \`number\`
+
+Count nested things.
+
+**things.nested.list()**
+
+> **list**(): \`void\`
+
+Has the same name as \`things.list\` and the top-level \`list\`."
+`;
+
+exports[`full format > sample library > matches the snapshot 1`] = `
+"### Functions
+
+#### greet()
+
+> **greet**(\`name\`: \`string\`, \`options?\`: [\`GreetingOptions\`](#greetingoptions)): [\`GreetingResult\`](#greetingresult)
+
+Generate a personalized greeting.
+
+##### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| \`name\` | \`string\` | The name of the person to greet |
+| \`options?\` | [\`GreetingOptions\`](#greetingoptions) | Configuration for the greeting |
+
+##### Returns
+
+[\`GreetingResult\`](#greetingresult)
+
+A greeting result with the message and metadata
+
+##### Examples
+
+\`\`\`ts
+const result = greet('World')
+console.log(result.message) // "Hello, World!"
+\`\`\`
+
+\`\`\`ts
+const result = greet('Professor', { formal: true })
+console.log(result.message) // "Good day, Professor."
+\`\`\`
+
+#### translate()
+
+> **translate**(\`greeting\`: [\`GreetingResult\`](#greetingresult), \`language\`: [\`Language\`](#language)): [\`GreetingResult\`](#greetingresult)
+
+Translate a greeting to a different language.
+
+##### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| \`greeting\` | [\`GreetingResult\`](#greetingresult) | The greeting result to translate |
+| \`language\` | [\`Language\`](#language) | Target language code |
+
+##### Returns
+
+[\`GreetingResult\`](#greetingresult)
+
+A new greeting result in the target language
+
+#### hello()
+
+> **hello**(\`name\`: \`string\`): \`string\`
+
+Create and immediately invoke a greeting with sensible defaults.
+
+This is the simplest way to generate a greeting — just pass a name.
+
+##### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| \`name\` | \`string\` | The name to greet |
+
+##### Returns
+
+\`string\`
+
+The greeting message string
+
+##### Example
+
+\`\`\`ts
+import hello from 'sample-lib'
+console.log(hello('World')) // "Hello, World!"
+\`\`\`
+
+### Classes
+
+#### GreetingGenerator
+
+A greeting generator that maintains state.
+
+##### Example
+
+\`\`\`ts
+const gen = new GreetingGenerator('en')
+const result = gen.generate('World')
+\`\`\`
+
+##### Constructors
+
+###### Constructor
+
+> **new GreetingGenerator**(\`language?\`: [\`Language\`](#language)): [\`GreetingGenerator\`](#greetinggenerator)
+
+Create a new greeting generator.
+
+**Parameters**
+
+| Parameter | Type | Default value | Description |
+| ------ | ------ | ------ | ------ |
+| \`language\` | [\`Language\`](#language) | \`'en'\` | The default language for greetings |
+
+##### Methods
+
+###### generate()
+
+> **generate**(\`name\`: \`string\`, \`options?\`: [\`GreetingOptions\`](#greetingoptions)): [\`GreetingResult\`](#greetingresult)
+
+Generate a greeting in the configured language.
+
+**Parameters**
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| \`name\` | \`string\` | The name to greet |
+| \`options?\` | [\`GreetingOptions\`](#greetingoptions) | Optional greeting configuration |
+
+**Returns**
+
+[\`GreetingResult\`](#greetingresult)
+
+The greeting result
+
+### Type Aliases
+
+#### GreetingOptions
+
+> **GreetingOptions** = \`object\`
+
+Configuration options for the greeting system.
+
+##### Properties
+
+| Property | Type | Description |
+| ------ | ------ | ------ |
+| \`formal?\` | \`boolean\` | Whether to use formal language. |
+| \`maxLength?\` | \`number\` | Maximum length of the greeting. |
+
+#### GreetingResult
+
+> **GreetingResult** = \`object\`
+
+A greeting result with metadata.
+
+##### Properties
+
+| Property | Type | Description |
+| ------ | ------ | ------ |
+| \`message\` | \`string\` | The formatted greeting message. |
+| \`timestamp\` | \`Date\` | Timestamp when the greeting was generated. |
+
+#### Language
+
+> **Language** = \`"en"\` \\| \`"es"\` \\| \`"fr"\` \\| \`"ja"\`
+
+Supported greeting languages.
+
+### Variables
+
+#### MAX\\_GREETING\\_LENGTH
+
+> \`const\` **MAX\\_GREETING\\_LENGTH**: \`100\` = \`100\`
+
+Default maximum greeting length."
+`;

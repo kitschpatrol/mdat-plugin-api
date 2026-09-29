@@ -1,0 +1,98 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`compact format > handles edge cases 1`] = `
+"### Functions
+
+| Function | Returns | Description |
+| --- | --- | --- |
+| \`useHidden(options: GlobalOptions)\` | \`GlobalOptions\` | Takes a type that isn't exported, so TypeDoc can't link it. |
+| \`undocumented(a: string, b?: number)\` | \`boolean\` |  |
+| \`overloaded(value: string)\` | \`string\` | Overloaded for strings. |
+| \`overloaded(value: number)\` | \`number\` | Overloaded for numbers. |
+| \`configure(options: { name: string; nested: object; onChange?: (value: number) => void })\` | \`string\` | Inline object parameter with a callback and a nested object. |
+| \`shout(text: string)\` | \`string\` | A function-typed variable. |
+| \`deep()\` | \`Promise<{ items: object[]; meta: object }>\` | Nested object types in return values. |
+
+### Interfaces
+
+| Interface | Definition | Description |
+| --- | --- | --- |
+| \`Adapter\` | \`{ name: string; read(path: string): Promise<string>; write?(path: string, content: string): Promise<void> }\` | Reads and writes files. |
+
+### Type Aliases
+
+| Type | Definition | Description |
+| --- | --- | --- |
+| \`CleanOptions\` | \`Pick<GlobalOptions, "dryRun" \\| "namespace">\` | Options for cleaning, derived from options that aren't exported. |
+| \`Options\` | \`GlobalOptions\` | Alias of a type that isn't exported. |
+| \`Wrapped<T>\` | \`{ value: T; wrapped: true }\` | A generic wrapper. |
+| \`EventName\` | \`\` \`on\${string}\` \`\` | A template literal type. |
+| \`Quoted\` | \`{ "file name": string }\` | Property names that aren't identifiers. |"
+`;
+
+exports[`compact format > renders namespaces as nested sections 1`] = `
+"### Functions
+
+| Function | Returns | Description |
+| --- | --- | --- |
+| \`list()\` | \`string[]\` | Top-level list, distinct from \`things.list\`. |
+| \`describe(options: ThingOptions)\` | \`string\` | Uses a type from a namespace. |
+
+### things
+
+Things you can list and add.
+
+#### Functions
+
+| Function | Returns | Description |
+| --- | --- | --- |
+| \`list(options?: ThingOptions)\` | \`string[]\` | List things. |
+| \`add(name: string)\` | \`string\` | Add a thing. |
+
+#### Type Aliases
+
+| Type | Definition | Description |
+| --- | --- | --- |
+| \`ThingOptions\` | \`{ verbose?: boolean }\` | Options shared across things. |
+
+#### things.nested
+
+Nested even deeper.
+
+##### Functions
+
+| Function | Returns | Description |
+| --- | --- | --- |
+| \`count()\` | \`number\` | Count nested things. |
+| \`list()\` | \`void\` | Has the same name as \`things.list\` and the top-level \`list\`. |"
+`;
+
+exports[`compact format > sample library > matches the snapshot 1`] = `
+"### Functions
+
+| Function | Returns | Description |
+| --- | --- | --- |
+| \`greet(name: string, options?: GreetingOptions)\` | \`GreetingResult\` | Generate a personalized greeting. |
+| \`translate(greeting: GreetingResult, language: Language)\` | \`GreetingResult\` | Translate a greeting to a different language. |
+| \`hello(name: string)\` | \`string\` | Create and immediately invoke a greeting with sensible defaults. |
+
+### Classes
+
+| Class | Constructor | Description |
+| --- | --- | --- |
+| \`GreetingGenerator\` | \`new GreetingGenerator(language?: Language)\` | A greeting generator that maintains state. |
+
+### Type Aliases
+
+| Type | Definition | Description |
+| --- | --- | --- |
+| \`GreetingOptions\` | \`{ formal?: boolean; maxLength?: number }\` | Configuration options for the greeting system. |
+| \`GreetingResult\` | \`{ message: string; timestamp: Date }\` | A greeting result with metadata. |
+| \`Language\` | \`"en" \\| "es" \\| "fr" \\| "ja"\` | Supported greeting languages. |
+
+### Variables
+
+| Variable | Type | Description |
+| --- | --- | --- |
+| \`MAX_GREETING_LENGTH\` | \`100\` | Default maximum greeting length. |"
+`;

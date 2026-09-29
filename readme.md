@@ -92,54 +92,60 @@ Build output paths are mapped back to their sources, so a field pointing to `./d
 
 <!-- api -->
 
-### Function: setLogger()
+### Functions
 
-> **setLogger**(`logger?`): `void`
+#### setLogger()
+
+> **setLogger**(`logger?`: `ILogBasic` | `ILogLayer`<`unknown`>): `void`
 
 Set the logger instance for the module. Export this for library consumers to
 inject their own logger.
 
-#### Parameters
+##### Parameters
 
 | Parameter | Type                                  | Description                                                                |
 | --------- | ------------------------------------- | -------------------------------------------------------------------------- |
 | `logger?` | `ILogBasic` \| `ILogLayer`<`unknown`> | Accepts either a LogLayer instance or a Console- or Stream-like log target |
 
-#### Returns
+### Type Aliases
 
-`void`
-
-### Type Alias: ApiRuleOptions
+#### ApiRuleOptions
 
 > **ApiRuleOptions** = `object`
 
 Options for the `<!-- api -->` rule.
 
-Pass these as a JSON5 argument in the comment tag, e.g. `<!--
-api({entryPoint: "src/index.ts", headingLevel: 2}) -->`.
+Pass them as a JSON5 object in the placeholder comment, e.g. `<!-- api({
+format: 'compact', include: ['greet', '*Options'] }) -->`.
 
-#### Properties
+##### Properties
 
-| Property        | Type     | Default value | Description                                                                                                                                                                   |
-| --------------- | -------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `entryPoint?`   | `string` | `undefined`   | Path to the TypeScript entry point file. If omitted, the entry point is inferred from `package.json` fields (`exports`, `types`, `main`) or common defaults (`src/index.ts`). |
-| `headingLevel?` | `number` | `3`           | Starting heading level for the generated documentation (1-6).                                                                                                                 |
-| `tsconfig?`     | `string` | `undefined`   | Path to a custom `tsconfig.json` file. Auto-detected if omitted.                                                                                                              |
+| Property        | Type                    | Default value      | Description                                                                                                                                                                                                                                                                                |
+| --------------- | ----------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `entryPoint?`   | `string`                | `undefined`        | Path to the TypeScript entry point, relative to the working directory. When omitted, it's inferred from `package.json` (`exports`, `types`, `main`, `module`), mapping build output like `./dist/index.js` back to `./src/index.ts`, and finally from common defaults like `src/index.ts`. |
+| `exclude?`      | `string`\[]             | `undefined`        | Names of top-level exports to leave out. Supports `*` wildcards, e.g. `['setLogger', 'default*']`. Applied after `include`.                                                                                                                                                                |
+| `format?`       | `"compact"` \| `"full"` | `'full'`           | Output style. `full` documents every export completely: signatures, parameter and property tables, and examples. `compact` renders one table row per export, with a subsection per namespace.                                                                                              |
+| `groupByKind?`  | `boolean`               | `true`             | Group exports under Functions, Classes, Type Aliases, etc. headings. When `false`, exports are listed together in `sort` order.                                                                                                                                                            |
+| `headingLevel?` | `number`                | `3`                | Heading level for the shallowest headings in the generated Markdown (1–6). Nested headings that would exceed level 6 are rendered as bold text.                                                                                                                                            |
+| `include?`      | `string`\[]             | `undefined`        | Names of top-level exports to document. Supports `*` wildcards, e.g. `['greet', '*Options']`. A namespace is included with all of its members. Everything is documented when omitted.                                                                                                      |
+| `sort?`         | `SortStrategy`\[]       | `['source-order']` | TypeDoc sort strategies applied to members, in priority order.                                                                                                                                                                                                                             |
+| `tsconfig?`     | `string`                | `undefined`        | Path to a `tsconfig.json`, relative to the working directory. TypeDoc finds the nearest one when omitted.                                                                                                                                                                                  |
 
-### Variable: default
+### Variables
 
-> `const` **default**: `Config`
+#### apiPlugin
+
+> `const` **apiPlugin**: `Config`
 
 Mdat plugin that generates API documentation from TypeScript source files.
 
-Uses TypeDoc and typedoc-plugin-markdown under the hood to extract JSDoc
-descriptions, type signatures, `@example` code blocks, and parameter tables
-from public exports.
+Uses TypeDoc to extract JSDoc descriptions, type signatures, `@example`
+blocks, and parameter tables from a package's public exports.
 
-Register in your `mdat.config.ts`, then embed `<!-- api -->` placeholder
-comments in your Markdown files:
+Register it in your `mdat.config.ts`, then add `<!-- api -->` placeholder
+comments to your Markdown files.
 
-#### Example
+##### Example
 
 ```ts
 import { defineConfig } from 'mdat'

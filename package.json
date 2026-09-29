@@ -37,8 +37,6 @@
 		"dist/*"
 	],
 	"scripts": {
-		"bench": "vitest bench --run --no-file-parallelism --compare test/benchmarks/baseline.json",
-		"bench:baseline": "vitest bench --run --no-file-parallelism --outputJson test/benchmarks/baseline.json",
 		"build": "tsdown --no-fixed-extension --tsconfig tsconfig.build.json",
 		"clean-deep": "shx rm -f pnpm-lock.yaml && git clean -fdX -e !.claude/",
 		"fix": "ksc fix",
@@ -63,7 +61,8 @@
 		"vitest": "^5.0.2"
 	},
 	"peerDependencies": {
-		"mdat": "^3.0.0"
+		"mdat": "^3.0.0",
+		"typescript": "^5.0.0 || ^6.0.0"
 	},
 	"packageManager": "pnpm@12.6.0",
 	"engines": {
