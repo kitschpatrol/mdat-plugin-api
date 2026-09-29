@@ -89,7 +89,7 @@ describe('compact format', () => {
 
 	it('summarizes nested object types as object', async () => {
 		const markdown = await generate(fixture('edge-cases.ts'), { format: 'compact' })
-		expect(markdown).toContain('| `deep()` | `Promise<{ items: object[]; meta: object }>` |')
+		expect(markdown).toContain('| `deep` | `Promise<{ items: object[]; meta: object }>` |')
 		expect(markdown).toContain('| `Quoted` | `{ "file name": string }` |')
 	})
 })

@@ -11,7 +11,6 @@ exports[`compact format > handles edge cases 1`] = `
 | \`overloaded(value: number)\` | \`number\` | Overloaded for numbers. |
 | \`configure(options: { name: string; nested: object; onChange?: (value: number) => void })\` | \`string\` | Inline object parameter with a callback and a nested object. |
 | \`shout(text: string)\` | \`string\` | A function-typed variable. |
-| \`deep()\` | \`Promise<{ items: object[]; meta: object }>\` | Nested object types in return values. |
 
 ### Interfaces
 
@@ -27,7 +26,13 @@ exports[`compact format > handles edge cases 1`] = `
 | \`Options\` | \`GlobalOptions\` | Alias of a type that isn't exported. |
 | \`Wrapped<T>\` | \`{ value: T; wrapped: true }\` | A generic wrapper. |
 | \`EventName\` | \`\` \`on\${string}\` \`\` | A template literal type. |
-| \`Quoted\` | \`{ "file name": string }\` | Property names that aren't identifiers. |"
+| \`Quoted\` | \`{ "file name": string }\` | Property names that aren't identifiers. |
+
+### Variables
+
+| Variable | Type | Description |
+| --- | --- | --- |
+| \`deep\` | \`Promise<{ items: object[]; meta: object }>\` | Nested object types inside type arguments. |"
 `;
 
 exports[`compact format > renders namespaces as nested sections 1`] = `

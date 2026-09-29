@@ -62,10 +62,9 @@ export interface Adapter {
 	write?(path: string, content: string): Promise<void>
 }
 
-/** Nested object types in return values. */
-export function deep(): Promise<{ items: Array<{ id: string }>; meta: { count: number } }> {
-	return Promise.resolve({ items: [], meta: { count: 0 } })
-}
+/** Nested object types inside type arguments. */
+export const deep: Promise<{ items: Array<{ id: string }>; meta: { count: number } }> =
+	Promise.resolve({ items: [], meta: { count: 0 } })
 
 /** Property names that aren't identifiers. */
 export type Quoted = {

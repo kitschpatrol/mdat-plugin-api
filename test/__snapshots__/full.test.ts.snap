@@ -49,12 +49,6 @@ Inline object parameter with a callback and a nested object.
 
 A function-typed variable.
 
-#### deep()
-
-> **deep**(): \`Promise\`\\<\\{ \`items\`: \`object\`[]; \`meta\`: \\{ \`count\`: \`number\`; \\}; \\}\\>
-
-Nested object types in return values.
-
 ### Interfaces
 
 #### Adapter
@@ -124,7 +118,15 @@ Property names that aren't identifiers.
 
 | Property | Type | Description |
 | ------ | ------ | ------ |
-| \`file name\` | \`string\` | Needs quotes. |"
+| \`file name\` | \`string\` | Needs quotes. |
+
+### Variables
+
+#### deep
+
+> \`const\` **deep**: \`Promise\`\\<\\{ \`items\`: \`object\`[]; \`meta\`: \\{ \`count\`: \`number\`; \\}; \\}\\>
+
+Nested object types inside type arguments."
 `;
 
 exports[`full format > namespaces > matches the snapshot 1`] = `

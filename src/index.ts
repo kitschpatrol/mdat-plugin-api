@@ -54,7 +54,12 @@ export type ApiRuleOptions = {
 	 */
 	include?: string[]
 	/**
-	 * TypeDoc sort strategies applied to members, in priority order.
+	 * [TypeDoc sort
+	 * strategies](https://typedoc.org/documents/Options.Organization.html#sort)
+	 * applied to members, in priority order. `source-order` and `alphabetical`
+	 * are the useful ones for a readme; `kind`, `static-first`, `instance-first`,
+	 * `visibility`, and `required-first` also affect class and interface
+	 * members.
 	 *
 	 * @defaultValue ['source-order']
 	 */
